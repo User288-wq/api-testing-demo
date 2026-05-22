@@ -10,5 +10,8 @@
   "devDependencies": {
     "newman": "^6.1.0",
     "newman-reporter-htmlextra": "^1.23.0"
+  },
+  "dependencies": {
+    "nodemailer": "^8.0.7"
   }
 }

@@ -4,8 +4,14 @@
   "values": [
     {
       "key": "BASE_URL",
-      "value": "https://jsonplaceholder.typicode.com",
+      "value": "https://votre-api.com/v1",
       "enabled": true
+    },
+    {
+      "value": "votre_clé_api",
+      "key": "API_KEY",
+      "enabled": true,
+      "type": "default"
     },
     {
       "value": "votre_clé_api",

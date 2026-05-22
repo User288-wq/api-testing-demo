@@ -1,30 +1,41 @@
 const fs = require('fs');
 const path = require('path');
 
-// Fonction pour lire le dernier rapport Newman (JSON) s'il existe
 function getLatestTestResults() {
     const reportsDir = './reports';
-    const jsonReports = [];
-    if (fs.existsSync(reportsDir)) {
-        const files = fs.readdirSync(reportsDir);
-        files.forEach(file => {
-            if (file.endsWith('.json') && file.includes('newman')) {
-                jsonReports.push(path.join(reportsDir, file));
-            }
-        });
-    }
+    if (!fs.existsSync(reportsDir)) return null;
+    const jsonReports = fs.readdirSync(reportsDir).filter(f => f.endsWith('.json') && f.includes('newman'));
     if (jsonReports.length === 0) return null;
-    // Prendre le plus récent
     const latest = jsonReports.sort().reverse()[0];
     try {
-        return JSON.parse(fs.readFileSync(latest, 'utf8'));
+        return JSON.parse(fs.readFileSync(path.join(reportsDir, latest), 'utf8'));
     } catch(e) { return null; }
 }
 
-// Générer le contenu HTML
+function getPerformanceMetrics() {
+    const perfFile = './reports/performance-metrics.json';
+    if (!fs.existsSync(perfFile)) return null;
+    try {
+        const data = JSON.parse(fs.readFileSync(perfFile, 'utf8'));
+        // k6 output structure may contain metrics
+        return data;
+    } catch(e) { return null; }
+}
+
 function generateDashboard() {
     const results = getLatestTestResults();
+    const perf = getPerformanceMetrics();
     const timestamp = new Date().toLocaleString();
+
+    // Extraire des métriques de performance
+    let avgResponseTime = 'N/A';
+    let p95ResponseTime = 'N/A';
+    let errorRate = 'N/A';
+    if (perf && perf.metrics) {
+        avgResponseTime = perf.metrics.http_req_duration?.avg?.toFixed(0) || 'N/A';
+        p95ResponseTime = perf.metrics.http_req_duration?.['p(95)']?.toFixed(0) || 'N/A';
+        errorRate = perf.metrics.http_req_failed?.rate?.toFixed(4) || 'N/A';
+    }
 
     const html = `<!DOCTYPE html>
 <html lang="fr">
@@ -50,26 +61,26 @@ function generateDashboard() {
 <body>
 <div class="container">
     <div class="header">
-        <h1>🚀 API Tests Dashboard</h1>
+        <h1>  API Tests Dashboard</h1>
         <p>User288-wq - Dernière mise à jour : ${timestamp}</p>
     </div>
 
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-label">✅ Taux de succès</div>
-            <div class="stat-value">${results ? results.run.stats.assertions.total ? (results.run.stats.assertions.failed === 0 ? 100 : ((results.run.stats.assertions.total - results.run.stats.assertions.failed) / results.run.stats.assertions.total * 100).toFixed(1)) : 'N/A' : 'N/A'}%</div>
+            <div class="stat-label">  Taux de succès (fonctionnel)</div>
+            <div class="stat-value">${results ? (results.run.stats.assertions.total ? ((results.run.stats.assertions.total - results.run.stats.assertions.failed) / results.run.stats.assertions.total * 100).toFixed(1) : 'N/A') : 'N/A'}%</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">📊 Total assertions</div>
-            <div class="stat-value">${results ? results.run.stats.assertions.total : 'N/A'}</div>
+            <div class="stat-label">  Temps réponse moyen (ms)</div>
+            <div class="stat-value">${avgResponseTime}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">⏱️ Temps réponse moyen</div>
-            <div class="stat-value">${results ? Math.round(results.run.stats.responseTimes.average) : 'N/A'} ms</div>
+            <div class="stat-label">  P95 temps réponse (ms)</div>
+            <div class="stat-value">${p95ResponseTime}</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">📈 Dernier run</div>
-            <div class="stat-value">${results ? new Date(results.run.timings.started).toLocaleTimeString() : 'N/A'}</div>
+            <div class="stat-label">  Taux d'erreur (performance)</div>
+            <div class="stat-value">${errorRate === 'N/A' ? 'N/A' : (errorRate * 100).toFixed(2) + '%'}</div>
         </div>
     </div>
 
@@ -118,10 +129,9 @@ function generateDashboard() {
 </script>
 </body>
 </html>`;
-    // Écrire dans le dossier docs (pour GitHub Pages)
     if (!fs.existsSync('./docs')) fs.mkdirSync('./docs');
     fs.writeFileSync('./docs/index.html', html);
-    console.log('✅ Dashboard généré dans docs/index.html');
+    console.log('  Dashboard généré dans docs/index.html');
 }
 
 generateDashboard();

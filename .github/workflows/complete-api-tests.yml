@@ -24,5 +24,23 @@ jobs:
       - name: Run API tests
         run: npm run test:dev
 
+      - name: Generate Dashboard
+        run: node scripts/generate-dashboard.js
+
+      - name: Upload Dashboard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard
+          path: docs/
+
+      - name: Generate Dashboard
+        run: node scripts/generate-dashboard.js
+
+      - name: Upload Dashboard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard
+          path: docs/
+
       - name: Send email notification (Ethereal)
         run: node scripts/email-notifier.js

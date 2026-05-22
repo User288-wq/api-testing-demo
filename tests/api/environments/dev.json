@@ -2,6 +2,16 @@
   "id": "dev-env",
   "name": "Dev",
   "values": [
-    { "key": "BASE_URL", "value": "https://jsonplaceholder.typicode.com", "enabled": true }
+    {
+      "key": "BASE_URL",
+      "value": "https://votre-api.com",
+      "enabled": true
+    },
+    {
+      "value": "votre_clé_api",
+      "key": "API_KEY",
+      "enabled": true,
+      "type": "default"
+    }
   ]
 }

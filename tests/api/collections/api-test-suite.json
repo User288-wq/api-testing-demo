@@ -85,7 +85,10 @@
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -127,7 +130,10 @@
       "request": {
         "method": "PUT",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
         "body": {
           "mode": "raw",
@@ -176,6 +182,35 @@
     {
       "key": "BASE_URL",
       "value": "https://jsonplaceholder.typicode.com"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "pm.request.headers.add({\n    key: \"X-API-Key\",\n    value: pm.environment.get(\"API_KEY\")\n});"
+        ],
+        "type": "text/javascript"
+      }
+    },
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "pm.request.headers.add({\n    key: \"X-API-Key\",\n    value: pm.environment.get(\"API_KEY\")\n});"
+        ],
+        "type": "text/javascript"
+      }
+    },
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "pm.request.headers.add({\n    key: \"X-API-Key\",\n    value: pm.environment.get(\"API_KEY\")\n});"
+        ],
+        "type": "text/javascript"
+      }
     }
   ]
 }

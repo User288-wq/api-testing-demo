@@ -1,0 +1,7 @@
+{
+  "id": "staging-env",
+  "name": "Staging",
+  "values": [
+    { "key": "BASE_URL", "value": "https://jsonplaceholder.typicode.com", "enabled": true }
+  ]
+}

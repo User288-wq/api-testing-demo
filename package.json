@@ -5,7 +5,8 @@
   "scripts": {
     "test:dev": "newman run tests/api/collections/api-test-suite.json -e tests/api/environments/dev.json -r cli,htmlextra --reporter-htmlextra-export reports/dev-report.html",
     "test:staging": "newman run tests/api/collections/api-test-suite.json -e tests/api/environments/staging.json -r cli,htmlextra --reporter-htmlextra-export reports/staging-report.html",
-    "test:all": "npm run test:dev && npm run test:staging"
+    "test:all": "npm run test:dev && npm run test:staging",
+    "test:security": "newman run tests/api/collections/security-tests.json -e tests/api/environments/dev.json -r cli,htmlextra --reporter-htmlextra-export reports/security-report.html"
   },
   "devDependencies": {
     "newman": "^6.1.0",

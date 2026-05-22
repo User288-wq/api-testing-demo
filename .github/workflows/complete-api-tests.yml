@@ -44,3 +44,15 @@ jobs:
 
       - name: Send email notification (Ethereal)
         run: node scripts/email-notifier.js
+
+  security:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - name: Run security tests
+        run: npx newman run tests/api/collections/security-tests.json -e tests/api/environments/dev.json

@@ -1,0 +1,78 @@
+{
+  "info": {
+    "name": "Security Tests Suite",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "SQL Injection - GET parameter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 400 ou 404', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
+              "});",
+              "const response = pm.response.text();",
+              "pm.test('Pas d\\'erreur SQL exposée', () => {",
+              "  pm.expect(response).to.not.match(/SQL syntax|mysql_fetch|ORA-[0-9]{5}|PostgreSQL.*ERROR/i);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/posts?id=1' OR '1'='1"
+      }
+    },
+    {
+      "name": "XSS - POST body",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.text();",
+              "pm.test('Scripts sont échappés ou supprimés', () => {",
+              "  pm.expect(response).to.not.match(/<script>/i);",
+              "  pm.expect(response).to.not.match(/onerror=/i);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"comment\": \"<script>alert('XSS')</script>\"}"
+        },
+        "url": "{{BASE_URL}}/posts"
+      }
+    },
+    {
+      "name": "Path Traversal",
+      "request": {
+        "method": "GET",
+        "url": "{{BASE_URL}}/../../../../etc/passwd"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Accès refusé (403/404)', () => {",
+              "  pm.expect(pm.response.code).to.be.oneOf([400, 403, 404]);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

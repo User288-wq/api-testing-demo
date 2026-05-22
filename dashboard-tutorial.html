@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head><title>Tutoriel Dashboard GitHub Pages</title>
+<style>
+body { font-family: Arial; padding: 20px; background: #0d1117; color: white; }
+.step { background: #161b22; margin: 20px; padding: 20px; border-radius: 10px; border-left: 5px solid #2cbe4e; }
+pre { background: #0d1117; padding: 10px; border-radius: 5px; }
+img.placeholder { background: #30363d; height: 200px; display: flex; align-items: center; justify-content: center; margin: 10px 0; border-radius: 5px; }
+button { background: #2cbe4e; border: none; padding: 10px 20px; color: white; cursor: pointer; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h1>📺 Tutoriel vidéo (simulation interactive)</h1>
+<div class="step">
+<h2>Étape 1 : Aller dans Settings</h2>
+<p>Cliquez sur l'onglet <strong>Settings</strong> dans votre dépôt GitHub.</p>
+<button onclick="alert('✅ Étape 1 validée')">J'ai fait ça</button>
+</div>
+<div class="step">
+<h2>Étape 2 : Choisir Pages</h2>
+<p>Dans le menu de gauche, cliquez sur <strong>Pages</strong>.</p>
+<button onclick="alert('✅ Étape 2 validée')">J'ai fait ça</button>
+</div>
+<div class="step">
+<h2>Étape 3 : Configurer la branche</h2>
+<p>Sous "Build and deployment", sélectionnez : <br/>
+- Source : <strong>Deploy from a branch</strong><br/>
+- Branche : <strong>main</strong><br/>
+- Dossier : <strong>/docs</strong><br/>
+Puis cliquez sur <strong>Save</strong>.</p>
+<button onclick="alert('✅ Étape 3 validée')">J'ai fait ça</button>
+</div>
+<div class="step">
+<h2>Étape 4 : Vérifier l'URL</h2>
+<p>Quelques instants plus tard, votre dashboard sera disponible à :<br/>
+<code>https://user288-wq.github.io/api-testing-demo</code></p>
+<button onclick="window.open('https://user288-wq.github.io/api-testing-demo')">Ouvrir le dashboard</button>
+</div>
+<p style="margin-top: 40px;">🎉 Terminé ! Vous pouvez maintenant consulter vos résultats de tests en ligne.</p>
+</body>
+</html>

@@ -39,5 +39,8 @@ jobs:
           name: dashboard
           path: docs/
 
-      - name: Send email notification (Ethereal)
+      - name: Send email notification (SendGrid)
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO || 'diaraf1993diouf@gmail.com' }}
         run: node scripts/email-notifier.js

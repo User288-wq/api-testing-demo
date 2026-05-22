@@ -17,7 +17,6 @@ function getPerformanceMetrics() {
     if (!fs.existsSync(perfFile)) return null;
     try {
         const data = JSON.parse(fs.readFileSync(perfFile, 'utf8'));
-        // k6 output structure may contain metrics
         return data;
     } catch(e) { return null; }
 }
@@ -92,7 +91,7 @@ function generateDashboard() {
     </div>
 
     <div class="footer">
-        <p>🤖 Généré automatiquement par GitHub Actions | <a href="https://github.com/User288-wq/api-testing-demo">Repository</a></p>
+        <p>  Généré automatiquement par GitHub Actions | <a href="https://github.com/User288-wq/api-testing-demo">Repository</a></p>
     </div>
 </div>
 <script>

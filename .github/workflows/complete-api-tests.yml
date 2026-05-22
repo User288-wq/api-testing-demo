@@ -8,51 +8,39 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  functional:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run API tests
-        run: npm run test:dev
-
-      - name: Generate Dashboard
-        run: node scripts/generate-dashboard.js
-
-      - name: Upload Dashboard artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dashboard
-          path: docs/
-
-      - name: Generate Dashboard
-        run: node scripts/generate-dashboard.js
-
-      - name: Upload Dashboard artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: dashboard
-          path: docs/
-
-      - name: Send email notification (Ethereal)
-        run: node scripts/email-notifier.js
-
-  security:
-    runs-on: ubuntu-latest
-    needs: test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - run: npm install
-      - name: Run security tests
-        run: npx newman run tests/api/collections/security-tests.json -e tests/api/environments/dev.json
+      - run: npm run test:dev
+
+  security:
+    runs-on: ubuntu-latest
+    needs: functional
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npx newman run tests/api/collections/security-tests.json -e tests/api/environments/dev.json
+
+  performance:
+    runs-on: ubuntu-latest
+    needs: functional
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run k6 load test
+        uses: grafana/k6-action@v0.3.0
+        with:
+          filename: tests/performance/load-test.js
+          flags: --out json=reports/performance-metrics.json
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-metrics
+          path: reports/performance-metrics.json

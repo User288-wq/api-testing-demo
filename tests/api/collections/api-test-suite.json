@@ -189,7 +189,7 @@
       "listen": "prerequest",
       "script": {
         "exec": [
-          "pm.request.headers.add({ key: \"Authorization\", value: \"Basic \" + pm.environment.get(\"BASIC_AUTH\") });"
+          "pm.request.headers.add({ key: \"X-API-Key\", value: pm.environment.get(\"API_KEY\") });"
         ],
         "type": "text/javascript"
       }

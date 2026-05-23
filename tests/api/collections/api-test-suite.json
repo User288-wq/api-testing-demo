@@ -189,25 +189,7 @@
       "listen": "prerequest",
       "script": {
         "exec": [
-          "pm.request.headers.add({\n    key: \"Authorization\",\n    value: \"Bearer \" + pm.environment.get(\"API_KEY\")\n});"
-        ],
-        "type": "text/javascript"
-      }
-    },
-    {
-      "listen": "prerequest",
-      "script": {
-        "exec": [
-          "pm.request.headers.add({\n    key: \"X-API-Key\",\n    value: pm.environment.get(\"API_KEY\")\n});"
-        ],
-        "type": "text/javascript"
-      }
-    },
-    {
-      "listen": "prerequest",
-      "script": {
-        "exec": [
-          "pm.request.headers.add({\n    key: \"X-API-Key\",\n    value: pm.environment.get(\"API_KEY\")\n});"
+          "pm.request.headers.add({ key: \"Authorization\", value: \"Basic \" + pm.environment.get(\"BASIC_AUTH\") });"
         ],
         "type": "text/javascript"
       }

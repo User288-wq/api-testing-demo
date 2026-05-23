@@ -78,3 +78,23 @@ jobs:
       - run: npm install
       - name: Send email notification (Ethereal)
         run: node scripts/email-notifier.js
+
+  slack-notification:
+    runs-on: ubuntu-latest
+    needs: [functional, dashboard, notify]
+    if: always()
+    steps:
+      - name: Send Slack notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_USERNAME: "API Tests Bot"
+          SLACK_TITLE: "Résultats des tests API"
+          SLACK_MESSAGE: |
+            Functional: ${{ needs.functional.result }}
+            Security: ${{ needs.security.result }}
+            Performance: ${{ needs.performance.result }}
+            Dashboard: ${{ needs.dashboard.result }}
+            Report: https://github.com/User288-wq/api-testing-demo/actions/runs/${{ github.run_id }}
+          SLACK_COLOR: ${{ contains(needs.*.result, 'failure') && 'danger' || 'good' }}
+          SLACK_FOOTER: "Déclenché par ${{ github.actor }}"
